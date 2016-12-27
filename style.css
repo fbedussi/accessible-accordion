@@ -8,14 +8,15 @@
     font-size: 110%;
     font-weight: bold;
     padding: 0.5em;
-    border: solid 1px black;
+    background: black;
+    color: white;
 }
 
 .tabContentOuter {
     height: 0;
     overflow: hidden;
     transition: height 0.5s;
-    border: solid 1px black;
+    border: solid 1px grey;
     border-top: none;
 }
 
