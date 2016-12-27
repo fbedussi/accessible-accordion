@@ -1,1 +1,4 @@
-Super minimal website boilerplate
+Accordion accessible to:
+- mouse
+- keyboard
+- screen readers
