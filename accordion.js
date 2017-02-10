@@ -95,6 +95,10 @@ var Tab = {
 			}
 		});
 
+		if (this.isOpen()) {
+			this.open();
+		}
+
 		return this;
 	}
 };
@@ -105,11 +109,7 @@ var Accordion = {
 	_openTab: null,
 
 	_setOpenTab: function(tab) {
-		var proto = this;
-		while (!proto.hasOwnProperty('_openTab')) {
-			proto = Object.getPrototypeOf(proto);
-		}
-		proto._openTab = tab;
+		this._openTab = tab;
 	},
 
 	_getOpenTab: function() {
