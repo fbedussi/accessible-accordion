@@ -20,7 +20,7 @@ var Tab = {
 		}
 
 		this._setOpen(true);
-		this._$tabEl.attr('aria-expanded', this._open);
+		this._$tabHeader.attr('aria-expanded', this._open);
 		this._$tabContentOuter.removeClass(this._hideClass).height(this._$tabContentInner.outerHeight());
 	},
 
@@ -30,7 +30,7 @@ var Tab = {
 		}
 
 		this._setOpen(false);
-		this._$tabEl.attr('aria-expanded', this._open);
+		this._$tabHeader.attr('aria-expanded', this._open);
 		this._$tabContentOuter.height(0);
 		setTimeout(() => {
 				this._$tabContentOuter.addClass(this._hideClass);
@@ -49,51 +49,59 @@ var Tab = {
 		this._$tabEl = $(this._tab);
 		this._$tabContentOuter = this._$tabEl.find(this._tabContentOuter).addClass(this._hideClass);
 		this._$tabContentInner = this._$tabEl.find(this._tabContentInner);
+		this._$tabHeader = this._$tabEl.find(this._tabHeader);
 
-		this._open = this._$tabEl.attr('aria-expanded') === 'false' ? false : true;
+		this._open = this._$tabHeader.attr('aria-expanded') === 'false' ? false : true;
 		var cssTransitionDuration = this._$tabContentOuter.css('transition-duration');
 		if (cssTransitionDuration) {
 			this._animationDuration = parseFloat(cssTransitionDuration) * 1000;
 		}
-		this._$tabHeader = this._$tabEl.find(this._tabHeader);
-		this._$tabHeader.on('click',
-				() => {
-					this.isOpen() ? this.close() : this.open();
-		});
 
-		this._$tabEl.on('keydown', (e) => {
-			if (e.target !== this._$tabHeader[0] && e.target !== this._$tabEl[0]) {
-				return;
-			}
+		this._$tabHeader
+            .off('.tab')
+            .on('click.tab', () => {
+                this.isOpen() ? this.close() : this.open();
+            })
+        ;
 
-			switch (e.keyCode) {
-				case 13: //intentional fallthrought
-				case 32:
-					this._$tabHeader.trigger('click');
-					break;
-				case 35: //End
-					if (this._accordion) {
-						this._accordion._focusTab('last');
-					}
-					break;
-				case 36: //Home
-					if (this._accordion) {
-						e.preventDefault();
-						this._accordion._focusTab('first');
-					}
-					break;
-				case 38: //up
-					if (this._accordion) {
-						this._accordion._focusTab('prev', this);
-					}
-					break;
-				case 40: //down
-					if (this._accordion) {
-						this._accordion._focusTab('next', this);
-					}
-					break;
-			}
-		});
+		this._$tabEl
+			.off('.tab')
+			.on('keydown.tab', (e) => {
+				if (e.target !== this._$tabHeader[0] && e.target !== this._$tabEl[0]) {
+					return;
+				}
+
+				switch (e.keyCode) {
+					case 13: //intentional fallthrought
+					case 32:
+						if (!this._$tabHeader.is('button')) {
+							this._$tabHeader.trigger('click');
+						}
+						break;
+					case 35: //End
+						if (this._accordion) {
+							this._accordion._focusTab('last');
+						}
+						break;
+					case 36: //Home
+						if (this._accordion) {
+							e.preventDefault();
+							this._accordion._focusTab('first');
+						}
+						break;
+					case 38: //up
+						if (this._accordion) {
+							this._accordion._focusTab('prev', this);
+						}
+						break;
+					case 40: //down
+						if (this._accordion) {
+							this._accordion._focusTab('next', this);
+						}
+						break;
+				}
+			})
+		;
 
 		if (this.isOpen()) {
 			this.open();
